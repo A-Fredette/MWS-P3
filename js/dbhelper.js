@@ -205,7 +205,25 @@ class DBHelper {
     });
   }
 
-//reviews are being written to a different part of the server, so they need to be GET and then added to indexDB
+ /**
+   * Fetch reviews by ID
+   * 
+   */
+  static fetchReviewsByRestaurantId(id) {
+    return new Promise((resolve, reject) => {
+      fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`,
+      { method: 'GET'})
+      .then(response => response.json())
+      .then(reviews => {
+        console.log('reviews by ID:', reviews);
+        resolve(reviews);
+      })
+      .catch(error => {
+        console.log('Error: ', error);
+        reject(error);
+      });
+    });
+  }
 
  /**
    * Fetch reviews by ID

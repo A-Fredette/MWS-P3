@@ -35,6 +35,7 @@ fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL';
     callback(error, null);
   } else {
+    fetchReviewsByRestaurantId(id);
     return new Promise((resolve, reject) => {
       DBHelper.fetchRestaurantById(id)
       .then(restaurant => {
@@ -50,7 +51,16 @@ fetchRestaurantFromURL = (callback) => {
       });
     });
   }
-};  
+}; 
+
+fetchReviewsByRestaurantId = (id) => {
+  console.log('Reviews REQUESTED!');
+  return new Promise((resolve, reject) => {
+    DBHelper.fetchReviewsByRestaurantId(id)
+     .then(reviews => 
+        fillReviewsHTML(reviews));
+    });
+};
 
 /**
  * Create restaurant HTML and add it to the webpage
@@ -75,7 +85,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  //fillReviewsHTML();
 };
 
 /**
