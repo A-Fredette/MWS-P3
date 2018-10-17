@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="canonical" href="https://localhost:8000"/>
+  <link rel="manifest" href="/manifest.json"> <!-- To pass lighthouse -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#3367D6"/>
+  <title>Restaurant Reviews</title>
+</head>
+
+<body>
+  <header>
+    <nav tabindex="0">
+      <h1><a href="/">Restaurant Reviews</a></h1>
+    </nav>
+  </header>
+
+  <main id="maincontent">
+
+    <section>
+      <div class="filter-options" role="Menu">
+        <h2>Filter Results</h2>
+        <select id="neighborhoods-select" tabindex="0" name="neighborhoods" aria-label="Form" onchange="updateRestaurants()">
+          <option value="all">All Neighborhoods</option>
+        </select>
+        <select id="cuisines-select" tabindex="0" name="cuisines" aria-label="Form" onchange="updateRestaurants()">
+          <option value="all">All Cuisines</option>
+        </select>
+      </div>
+      <div class="restaurants-list-container" aria-label="Restaurants">
+        <ul id="restaurants-list"></ul>
+      </div>
+      <section id="map-container">
+        <div id="map" tabindex="0" aria-label="city map"></div>
+      </section>
+    </section>
+  </main>
+
+  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+  <script type="application/javascript" src="js/idb.js"></script>
+  <script charset="utf-8" src="js/indexeddb.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCnk13B0GvH152PBNcvAyJRURzQyCgDInk&libraries=places&callback=initMap"></script>
+  
+  <footer id="footer">
+    Copyright (c) 2018 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+  </footer>
+
+</body>
+
+</html>

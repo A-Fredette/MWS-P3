@@ -1,0 +1,21 @@
+{
+  "short_name": "RR's",
+  "name": "Restaurant reviews",
+  "icons": [
+    {
+      "src": "img/1-250.jpg",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "img/2.jpg",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "http://localhost:8000/",
+  "background_color": "#3367D6",
+  "display": "fullscreen",
+  "scope": "/",
+  "theme_color": "#3367D6"
+}
