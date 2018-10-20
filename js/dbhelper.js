@@ -207,7 +207,6 @@ class DBHelper {
 
  /**
    * Fetch reviews by ID
-   * 
    */
   static fetchReviewsByRestaurantId(id) {
     return new Promise((resolve, reject) => {
@@ -216,27 +215,10 @@ class DBHelper {
       .then(response => response.json())
       .then(reviews => {
         console.log('reviews by ID:', reviews);
-        resolve(reviews);
-      })
-      .catch(error => {
-        console.log('Error: ', error);
-        reject(error);
-      });
-    });
-  }
-
- /**
-   * Fetch reviews by ID
-   * 
-   */
-  static fetchReviewsById(id) {
-    return new Promise((resolve, reject) => {
-      fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`,
-      { method: 'GET'})
-      .then(response => response.json())
-      .then(reviews => {
-        console.log('reviews by ID:', reviews);
-        resolve(reviews);
+        reviews.forEach(function(review) {
+          console.log('writing to review DB');
+          writeDatabaseKP('reviews', review);
+        });
       })
       .catch(error => {
         console.log('Error: ', error);
@@ -247,7 +229,6 @@ class DBHelper {
 
   /**
    * Delete review by review ID
-   * 
    */
   static deleteReviewById(id) {
     fetch(`http://localhost:1337/reviews/${id}`,
@@ -261,7 +242,10 @@ class DBHelper {
   }
 
 
- static getAllReview() {
+ /**
+   * Get all reviews form the server
+   */
+  static getAllReviews() {
     return new Promise((resolve, reject) => {
       fetch(`http://localhost:1337/reviews/`,
       { method: 'GET'})
@@ -277,54 +261,70 @@ class DBHelper {
     });
   }
 
-
   /**
    * If online: Post a review to the server & update indexed
    * If offline: Call function to store review in local storage to be sent to server when online
+   * @param review: object with restaurant_id, name, rating and comments
    */
   static postReview(review) {
-    let id = parseInt(review.restaurant_id);
-
-    //check for online/offline status
-    if (navigator.onLine) {
-      console.log('we are online => sending review to server!');
-    
-      let reviewSend = {
+    let reviewSend = {
+        "restaurant_id": parseInt(review.restaurant_id),
         "name": review.name,
         "rating": parseInt(review.rating),
-        "comments": review.comments,
-        "restuarant_id": id,
-        "date": new Date()
+        "comments": review.comments
       };
+
+    //check for online/offline status
+    if (navigator.onLine) { 
+      console.log('we are online => sending review to server!');
 
       fetch(`http://localhost:1337/reviews/`, {
         method: 'POST',
-        body: JSON.stringify(reviewSend),
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
-        }
-      }).then(response => {
+        body: JSON.stringify(reviewSend)
+      }).then(response => { 
         console.log('Review POST success: ', response);
-      })
-
-      //Write review into indexedDB
-      .then((response) => {
-      promiseDB.then(function(db) {
-        const tx = db.transaction('restaurants', 'readwrite');
-        const restaurantStore = tx.objectStore('restaurants');
-        restaurantStore.get(id)
-        .then((restuarant) => {
-          console.log('restaurant retrieved from idb', restuarant);
-          restuarant.reviews.push(reviewSend);
-          console.log('restaurant review pushed', restuarant);
-          restaurantStore.put(restuarant);
-        });
+        DBHelper.writeReviewToIDB(reviewSend, reviewSend.restaurant_id)
+        .then(response => console.log('IndexedDB successfully updated'));
+      }).catch(error => { console.log('Error writing review to the server', error);
       });
-    })
 
-      .catch(error => {
-        console.log('Error writing review to the server', error);
-      });
+    } else { //if offline, send the review object to be stored until online
+      DBHelper.offlineReviewHandling(reviewSend);
     }
   }
+
+  /**
+   * Fetch reviews from server and update them in indexedDb
+   */
+  static writeReviewToIDB(review, id) {
+    console.log('Writing in IDB');
+    DBHelper.fetchReviewsByRestaurantId(id)
+    .then(reviews => {
+      reviews.forEach(review => {
+        writeDatabaseKP('reviews', review);
+      });
+    });
+  }
+
+   /**
+   * Keep review in local storage until it is ready to be retrieved
+   * @param review: object with restaurant_id, name, rating and comments
+   */
+  static offlineReviewHandling(review) {
+    console.log('Offline: storing review locally');
+    localStorage.setItem('data', JSON.stringify(review));
+
+    window.addEventListener('online', (e) => { //send the data when we're back online
+      console.log('Came online => updating server');
+
+      let reviewSend = JSON.parse(localStorage.getItem('data'));
+      console.log('Parsed reviewed data: ', reviewSend);
+
+      DBHelper.postReview(reviewSend);
+
+      localStorage.removeItem('data');
+      console.log('localStorage item removed');
+    });
+  }
 }
+

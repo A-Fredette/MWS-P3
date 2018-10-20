@@ -53,14 +53,26 @@ fetchRestaurantFromURL = (callback) => {
   }
 }; 
 
+/**
+ * Gets the reviews by ID from the server / indexedDB
+ */
 fetchReviewsByRestaurantId = (id) => {
   console.log('Reviews REQUESTED!');
-  return new Promise((resolve, reject) => {
-    DBHelper.fetchReviewsByRestaurantId(id)
+
+  readDatabase('reviews') //check for reviews in idb
+  .then(results => {
+    let reviews = results.filter(review => restaurant_id = id);
+
+    if (reviews.length > 0)  {
+      console.log('Filled from indexedDB');
+      fillReviewsHTML(reviews);
+    } else { //if no reviews in indexedDB, run a GET server request
+      DBHelper.fetchReviewsByRestaurantId(id)
      .then(reviews => 
         fillReviewsHTML(reviews));
-    });
-};
+      }
+    }); 
+  };
 
 /**
  * Create restaurant HTML and add it to the webpage
@@ -136,8 +148,12 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 /**
  * Create review HTML and add it to the webpage.
  */
-createReviewHTML = (review) => {
+createReviewHTML = (review, onlineStatus = true) => {
   const li = document.createElement('li');
+
+  //class for styling if offline
+  if (!onlineStatus) { li.classList.add('offline'); }
+
   const name = document.createElement('p');
   let reviewIndex = 20;
   name.innerHTML = review.name;
@@ -189,9 +205,7 @@ addTabIndex = (element) => {
  * Organize review data and send to front and back ends 
  */
 submitReview = () => {
-  event.preventDefault(); //stop form default behavior
-
-  console.log('postReview initiated');
+  event.preventDefault();
 
   let restaurant_id = getParameterByName('id'),
       name = document.forms[0].elements[0].value,
@@ -210,14 +224,17 @@ submitReview = () => {
     createdAt: new Date()
   };
 
-  console.log('review package', reviewInfo);
-
   //post review DOM
-  //addReviewHTML(reviewDOM);
+  const ul = document.getElementById('reviews-list');
+
+  if (!navigator.onLine)  {
+    ul.appendChild(createReviewHTML(reviewInfo, false));
+  } else {
+     ul.appendChild(createReviewHTML(reviewInfo));
+  }
 
   //send to server
   DBHelper.postReview(reviewInfo);
-
   document.querySelector('.review-form').reset();
 };
 
