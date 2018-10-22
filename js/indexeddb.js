@@ -30,8 +30,8 @@ let promiseDB = idb.open('restaurant-review-data', 2, function(upgradeDb) { // c
 writeDatabaseKP = (database, value) => {
   promiseDB.then(function(db) {
   const tx = db.transaction(database, 'readwrite');
-  const neighborhoodStore = tx.objectStore(database);
-  neighborhoodStore.put(value);
+  const onjectStore = tx.objectStore(database);
+  onjectStore.put(value);
   return tx.complete; //promise that fullfills if and when the transaction completes and rejects if it fails
   }).then(function(result){
     return;
@@ -46,8 +46,8 @@ readDatabase = (database) => {
   return new Promise((resolve, reject) => {
     promiseDB.then(function(db) {
       const tx = db.transaction(database, 'readonly');
-      const restaurantInfo = tx.objectStore(database);
-      let data = restaurantInfo.getAll();
+      const objectInfo = tx.objectStore(database);
+      let data = objectInfo.getAll();
       resolve(data);
     });
   }).catch(error => console.log(error));
@@ -60,8 +60,8 @@ readDatabaseByKey = (database, key) => {
   return new Promise((resolve, reject) => {
     promiseDB.then(function(db) {
       const tx = db.transaction(database, 'readonly');
-      const restaurantInfo = tx.objectStore(database);
-      let data = restaurantInfo.get(key);
+      const objectInfo = tx.objectStore(database);
+      let data = objectInfo.get(key);
       console.log('db info read by key ', data);
       resolve(data);
     });
@@ -75,8 +75,8 @@ readDatabaseIndexByKey = (database, indexName, key) => {
   return new Promise((resolve, reject) => {
     promiseDB.then(function(db) {
       const tx = db.transaction(database, 'readonly');
-     const restaurantInfo = tx.objectStore(database).index(indexName);
-      let data = restaurantInfo.get(key);
+     const objectInfo = tx.objectStore(database).index(indexName);
+      let data = objectInfo.get(key);
       console.log('db info read by key ', data);
       resolve(data);
     });
@@ -90,8 +90,8 @@ countDatabase = (database) => {
   return new Promise((resolve, reject) => {
      promiseDB.then(function(db) {
      const tx = db.transaction(database, 'readonly');
-     const restaurantInfo = tx.objectStore(database);
-     let data = restaurantInfo.count();
+     const objectInfo = tx.objectStore(database);
+     let data = objectInfo.count();
      resolve(data);
     });
  }).catch(error => console.log(error));
@@ -105,8 +105,8 @@ countIndex = (database, indexName) => {
   return new Promise((resolve, reject) => {
      promiseDB.then(function(db) {
      const tx = db.transaction(database, 'readonly');
-     const restaurantInfo = tx.objectStore(database).index(indexName);
-     let data = restaurantInfo.count();
+     const objectInfo = tx.objectStore(database).index(indexName);
+     let data = objectInfo.count();
      console.log('counted: ', data);
      resolve(data);
     });

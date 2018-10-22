@@ -651,6 +651,42 @@
         "createdAt": "2018-10-20T16:56:21.653Z",
         "updatedAt": "2018-10-20T16:56:21.653Z",
         "id": 46
+      },
+      {
+        "restaurant_id": 8,
+        "name": "Norman",
+        "rating": 2,
+        "comments": "IT'S REALLY HARD TO HEAR IN HERE. TOO LOUD. TOO MANY SPORTS FANS.",
+        "createdAt": "2018-10-21T02:20:08.904Z",
+        "updatedAt": "2018-10-21T02:20:08.904Z",
+        "id": 47
+      },
+      {
+        "restaurant_id": 8,
+        "name": "Gary Van",
+        "rating": 5,
+        "comments": "It's so so so so so so so so so so so so so so so so so so SO good.",
+        "createdAt": "2018-10-21T02:23:11.928Z",
+        "updatedAt": "2018-10-21T02:23:11.928Z",
+        "id": 48
+      },
+      {
+        "restaurant_id": 8,
+        "name": "Shy Tom",
+        "rating": 5,
+        "comments": "I like this place because not very many people come to talk to me. I can surf the blackholes of the web in peace.",
+        "createdAt": "2018-10-21T02:25:36.981Z",
+        "updatedAt": "2018-10-21T02:25:36.981Z",
+        "id": 49
+      },
+      {
+        "restaurant_id": 8,
+        "name": "Yellowfin Larry",
+        "rating": 4,
+        "comments": "I really appreciate that they don't have sushi on the menu. Sushi leaves a bad taste in my mouth.",
+        "createdAt": "2018-10-21T02:28:12.454Z",
+        "updatedAt": "2018-10-21T02:28:12.454Z",
+        "id": 50
       }
     ]
   },
@@ -706,7 +742,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 46
+      "id": 50
     }
   }
 }

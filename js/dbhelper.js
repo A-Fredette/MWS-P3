@@ -215,10 +215,11 @@ class DBHelper {
       .then(response => response.json())
       .then(reviews => {
         console.log('reviews by ID:', reviews);
-        reviews.forEach(function(review) {
-          console.log('writing to review DB');
+        reviews.forEach(review => {
+          console.log('writing to review DB: ', review);
           writeDatabaseKP('reviews', review);
         });
+        resolve(reviews);
       })
       .catch(error => {
         console.log('Error: ', error);
@@ -283,8 +284,8 @@ class DBHelper {
         body: JSON.stringify(reviewSend)
       }).then(response => { 
         console.log('Review POST success: ', response);
-        DBHelper.writeReviewToIDB(reviewSend, reviewSend.restaurant_id)
-        .then(response => console.log('IndexedDB successfully updated'));
+        DBHelper.writeReviewToIDB(reviewSend, reviewSend.restaurant_id);
+        //TODO: Review is not writing when written after loading and offline to online review
       }).catch(error => { console.log('Error writing review to the server', error);
       });
 
@@ -296,7 +297,7 @@ class DBHelper {
   /**
    * Fetch reviews from server and update them in indexedDb
    */
-  static writeReviewToIDB(review, id) {
+  static writeReviewToIDB(id) {
     console.log('Writing in IDB');
     DBHelper.fetchReviewsByRestaurantId(id)
     .then(reviews => {
@@ -316,10 +317,9 @@ class DBHelper {
 
     window.addEventListener('online', (e) => { //send the data when we're back online
       console.log('Came online => updating server');
-
       let reviewSend = JSON.parse(localStorage.getItem('data'));
-      console.log('Parsed reviewed data: ', reviewSend);
 
+      console.log('Parsed reviewed data: ', reviewSend);
       DBHelper.postReview(reviewSend);
 
       localStorage.removeItem('data');

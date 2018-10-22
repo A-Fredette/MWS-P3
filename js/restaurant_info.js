@@ -61,18 +61,24 @@ fetchReviewsByRestaurantId = (id) => {
 
   readDatabase('reviews') //check for reviews in idb
   .then(results => {
-    let reviews = results.filter(review => restaurant_id = id);
+    console.log('all reviews from IDB: ', results);
+    let reviews = results.filter(review => review.restaurant_id === parseInt(id));
+
+    console.log('Filtered reviews from idb: ', reviews);
 
     if (reviews.length > 0)  {
       console.log('Filled from indexedDB');
       fillReviewsHTML(reviews);
-    } else { //if no reviews in indexedDB, run a GET server request
+    } else { //if no reviews in indexedDB, GET server request and update indexedDB
+      console.log('No IDB reviews, calling server');
       DBHelper.fetchReviewsByRestaurantId(id)
-     .then(reviews => 
-        fillReviewsHTML(reviews));
-      }
-    }); 
-  };
+     .then(reviews => {
+        console.log('reviews from server: ', reviews);
+        fillReviewsHTML(reviews);
+      });
+    } 
+  });
+};
 
 /**
  * Create restaurant HTML and add it to the webpage
@@ -161,7 +167,13 @@ createReviewHTML = (review, onlineStatus = true) => {
   addTabIndex(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  const reviewDate = new Date(review.createdAt);
+
+  const day = reviewDate.getDate();
+  const month = reviewDate.getMonth() + 1; //Months are zero based
+  const year = reviewDate.getFullYear();
+
+  date.innerHTML = "Date: " + day + "-" + month + "-" + year;
   li.appendChild(date);
   addTabIndex(date);
 
@@ -201,6 +213,18 @@ addTabIndex = (element) => {
   element.tabIndex = 0;
 };
 
+ /**
+  *Utility function for genereating a GUID
+  * @returns {string}
+  */
+GUID = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+     var r = Math.random()*16|0,
+         v = c === 'x' ? r : (r&0x3|0x8);
+     return v.toString(16).toUpperCase();
+  });
+};
+
 /**
  * Organize review data and send to front and back ends 
  */
@@ -211,7 +235,8 @@ submitReview = () => {
       name = document.forms[0].elements[0].value,
       rating = document.forms[0].elements[1].value,
       comments = document.forms[0].elements[2].value.substring(0, 300), //300 character max
-      createdAt = new Date();
+      createdAt = new Date(),
+      id = GUID();
 
   const review = [name, rating, comments, restaurant_id];
 
