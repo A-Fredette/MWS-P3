@@ -1,6 +1,6 @@
 
 // Only caching needs to be implemented, no other ServiceWorker features.
-/*addEventListener('install', function(event) {
+addEventListener('install', function(event) {
   event.waitUntil(
     caches.open('restaurantCache').then(function(cache) {
       return cache.addAll([
@@ -53,14 +53,4 @@ self.addEventListener('fetch', function(event) {
         return fetch(event.request);
     }));
 });
-*/
 
-//sample code for examples of intercepting fetch requests
-/*self.addEventListener('fetch', function(event) {
-  console.log('fetched from SW js: ', event.request);
-});
-
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    new Response('HEY!'));
-});*/

@@ -205,29 +205,6 @@ class DBHelper {
     });
   }
 
- /**
-   * Fetch reviews by ID
-   */
-  static fetchReviewsByRestaurantId(id) {
-    return new Promise((resolve, reject) => {
-      fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`,
-      { method: 'GET'})
-      .then(response => response.json())
-      .then(reviews => {
-        console.log('reviews by ID:', reviews);
-        reviews.forEach(review => {
-          console.log('writing to review DB: ', review);
-          writeDatabaseKP('reviews', review);
-        });
-        resolve(reviews);
-      })
-      .catch(error => {
-        console.log('Error: ', error);
-        reject(error);
-      });
-    });
-  }
-
   /**
    * Delete review by review ID
    */
@@ -284,8 +261,7 @@ class DBHelper {
         body: JSON.stringify(reviewSend)
       }).then(response => { 
         console.log('Review POST success: ', response);
-        DBHelper.writeReviewToIDB(reviewSend, reviewSend.restaurant_id);
-        //TODO: Review is not writing when written after loading and offline to online review
+        DBHelper.fetchReviewsByRestaurantId(reviewSend.restaurant_id); //fetches reviews and PUT in indexedDB
       }).catch(error => { console.log('Error writing review to the server', error);
       });
 
@@ -303,6 +279,29 @@ class DBHelper {
     .then(reviews => {
       reviews.forEach(review => {
         writeDatabaseKP('reviews', review);
+      });
+    });
+  }
+
+   /**
+   * Fetch reviews by ID and PUT in indexedDB
+   */
+  static fetchReviewsByRestaurantId(id) {
+    return new Promise((resolve, reject) => {
+      fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`,
+      { method: 'GET'})
+      .then(response => response.json())
+      .then(reviews => {
+        console.log('reviews by ID:', reviews);
+        reviews.forEach(review => {
+          console.log('writing to review DB: ', review);
+          writeDatabaseKP('reviews', review);
+        });
+        resolve(reviews);
+      })
+      .catch(error => {
+        console.log('Error: ', error);
+        reject(error);
       });
     });
   }

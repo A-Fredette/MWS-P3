@@ -176,6 +176,7 @@ nav h1 a {
 #restaurants-list li {
   background-color: #fff;
   border: 2px solid #ccc;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   font-family: Arial, Helvetica, sans-serif;
   margin: 15px;
   min-height: 380px;
@@ -193,7 +194,6 @@ nav h1 a {
   margin: 0;
   max-width: 100%;
   min-height: 55%;
-  min-width: 100%;
   margin-top: 20px
 }
 
@@ -296,6 +296,10 @@ nav h1 a {
 	width: 90%;
 }
 
+#restaurant-hours {
+  padding:10px;
+}
+
 #restaurant-address {
   font-size: 12pt;
   margin: 10px 0px;
@@ -326,7 +330,7 @@ nav h1 a {
   font-size: 24pt;
   font-weight: 300;
   letter-spacing: -1px;
-  padding-bottom: 1pt;
+  padding: 10px 0 0;
 }
 
 #reviews-list {
@@ -342,6 +346,8 @@ nav h1 a {
   overflow: hidden;
   position: relative;
   width: 85%;
+  padding: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
 #reviews-list li:last-of-type {
@@ -349,10 +355,12 @@ nav h1 a {
 }
 
 #reviews-list li p {
+  font-size: 1.2em;
   margin: 0 0 10px;
 }
 
 #reviews-list li p:first-of-type {
+  font-size: 1.5em;
   font-weight: bold;
 }
 
@@ -361,7 +369,44 @@ nav h1 a {
 }
 
 /* Review Form */
+.review-form-container {
+  background-color: #f3f3f3;
+}
 
+.review-form-container button {
+  background-color: orange;
+  border-bottom: 3px solid #eee;
+  color: #fff;
+  display: inline-block;
+  font-size: 10pt;
+  margin: 15px 0 0 20px;
+  padding: 8px 30px 10px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+#review {
+  margin-top: 10px;
+}
+
+textarea#review {
+  border-color: rgb(209, 220, 218);
+}
+
+.form-title {
+  color: #f58500;
+  font-size: 24pt;
+  font-weight: 300;
+  letter-spacing: -1px;
+  margin-left: 20px;
+  padding: 10px 0 0;
+}
+
+form label{
+  font-size: 1.3em;
+  margin: 10px 0 10px 20px;
+}
 
 /* Mobile Responsive */
 @media screen and (max-width: 1177px) and (min-width: 986px) {
